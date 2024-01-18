@@ -1,0 +1,123 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* border-bottom: 1px solid black; */
+  /* border-top: 1px solid black; */
+  /* padding-top: 2px; */
+}
+.head {
+  height: 18vh;
+  background-color: orange;
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  margin-bottom: 15px;
+}
+
+.foot {
+  height: 8vh;
+  margin-top: 10px;
+  background-color: pink;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.container {
+  display: flex;
+  height: 71vh;
+}
+
+.middle {
+  width: 60vw;
+  background-color: palegoldenrod;
+  border: 1px solid black;
+}
+
+.middle .label {
+  border: 1px solid grey;
+  height: 40%;
+  width: 50%;
+  position: relative;
+  top: 40%;
+  left: 25%;
+}
+.middle .label label {
+  position: relative;
+  text-align: center;
+  display: block;
+  top: inherit;
+}
+.container .left-side {
+  width: 20vw;
+  border: 1px solid black;
+  background-color: greenyellow;
+  margin-right: 10px;
+}
+.container .left-side a {
+  justify-content: left;
+  display: flex;
+  margin-top: 40px;
+  padding-top: 21px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.container .right-side {
+  width: 20vw;
+  border: 1px solid black;
+  background-color: aqua;
+  margin-left: 10px;
+}
+.container .right-side a {
+  justify-content: right;
+  margin-top: 40px;
+  padding-top: 21px;
+  padding-bottom: 20px;
+  padding-right: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: 600;
+  display: flex;
+}
+@media (max-width: 492px) {
+  .container .right-side a {
+    font-size: small;
+  }
+  .container .left-side a {
+    font-size: small;
+  }
+}
+
+@media (max-width: 330px) {
+  .container .right-side a {
+    padding: auto;
+    margin: auto;
+  }
+  .container .right-side {
+    height: inherit;
+    margin: auto;
+  }
+  .container .left-side {
+    height: inherit;
+    padding: 0;
+    margin: auto;
+    justify-content: left;
+  }
+  .container .left-side a {
+    padding: auto;
+    margin: auto;
+  }
+  .middle {
+    width: auto;
+  }
+  .container {
+    height: 71vh;
+  }
+}
