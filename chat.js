@@ -172,6 +172,8 @@ const currentDate = new Date();
 const formattedDate = formatDate(currentDate);
 console.log(typeof formattedDate);
 
+// https://tailwindcomponents.com/component/chat-layout
+
 // const Message = {
 //   text: "Message",
 //   userId: 1,
