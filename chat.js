@@ -1,4 +1,206 @@
-let p_user1_input_text = document.getElementById("user_1_input_text");
+const GUser1MessageInput = document.getElementById("user_1_input_text");
+const GUser2MessageInput = document.getElementById("user_2_input_text");
+
+// const GUser1ChattingArea = document.getElementById("user_1_textarea");
+// const GUser2ChattingArea = document.getElementById("user_2_textarea");
+
+// const templatedMessageLeft = document.getElementById("temp-placeholder-text-left");
+// const GTemplatedMessageRight = document.getElementById("temp-placeholder-text-right");
+
+
+
+const GMessageObj = {
+    messages: [],
+    addMessage(text, userId) {
+        if (text.trim()) {
+            this.messages.push({
+                text,
+                userId,
+                time: pvtFormatDate(new Date()),
+            });
+        } else {
+            console.error("Please enter a valid message");
+        }
+    }
+};
+
+GUser1MessageInput.addEventListener("keypress", pvtUser1EnterKeyEvent);
+GUser2MessageInput.addEventListener("keypress", pvtUser2EnterKeyEvent);
+
+
+function pvtCreateMessageElement(text, time, isSender) {
+    const LMessageElementDiv = document.createElement("div");
+    const classes = ["flex", "flex-col", "text-black", "max-w-xs", "rounded-lg", "break-words"];
+    if (isSender) {
+        classes.push("justify-self-end", "bg-blue-300", "w-max");
+    } else {
+        classes.push("w-max", "bg-gray-300");
+    }
+
+    LMessageElementDiv.className = classes.join(" ");
+
+    const LContentElement = document.createElement("div");
+    LContentElement.className = "px-2";
+
+
+    const LTextPara = document.createElement("p");
+    LTextPara.className = 'whitespace-pre-line';
+    LTextPara.appendChild(document.createTextNode(text));
+    LContentElement.appendChild(LTextPara);
+    LMessageElementDiv.appendChild(LContentElement);
+
+
+    const LTimeElement = document.createElement("div");
+    LTimeElement.className = "p-2 py-1 flex text-xs text-right";
+    LTimeElement.appendChild(document.createTextNode(time));
+    LMessageElementDiv.appendChild(LTimeElement);
+
+    return LMessageElementDiv;
+}
+
+function pvtApplyTemplateLayer(p_varPlaceholderMessage) {
+    p_varPlaceholderMessage.classList.remove("hidden");
+}
+
+function pvtRemoveTemplateLayer(p_varPlaceholderMessage) {
+    p_varPlaceholderMessage.classList.add("hidden");
+}
+
+function pvtAppendMessageToConversation(p_varParent, p_varMessageElement) {
+    p_varParent.appendChild(p_varMessageElement);
+}
+
+function pvtSendMessage(p_strText, p_intUserId, p_varSenderArea, p_varReceiverArea) {
+    if (p_varReceiverArea.childElementCount === 0 || p_varSenderArea.childElementCount === 0) {
+        const LPlaceholderTextLeft = document.getElementById("temp-placeholder-text-left");
+        const LPlaceholderTextRight = document.getElementById("temp-placeholder-text-right");
+        pvtRemoveTemplateLayer(LPlaceholderTextLeft);
+        pvtRemoveTemplateLayer(LPlaceholderTextRight);
+    }
+
+    const LMessageObjectLength = GMessageObj.messages.length;
+    const LIsUser1Bool = p_intUserId === 1;
+
+    const LSenderElement = pvtCreateMessageElement(p_strText, GMessageObj.messages[LMessageObjectLength - 1].time, LIsUser1Bool);
+    const LReceiverElement = pvtCreateMessageElement(p_strText, GMessageObj.messages[LMessageObjectLength - 1].time, !LIsUser1Bool);
+
+    LSenderElement['title'] = LIsUser1Bool ? 'You' : 'User' + p_intUserId;
+    LReceiverElement['title'] = !LIsUser1Bool ? 'You' : 'User' + p_intUserId;
+
+    pvtAppendMessageToConversation(LIsUser1Bool ? p_varSenderArea : p_varReceiverArea, LSenderElement);
+    pvtAppendMessageToConversation(LIsUser1Bool ? p_varReceiverArea : p_varSenderArea, LReceiverElement);
+
+    pvtScrollToBottom();
+    GUser1MessageInput.value = "";
+    GUser2MessageInput.value = "";
+}
+
+function pvtUser1MessageSend() {
+    const LTextInputFromUser1 = GUser1MessageInput.value;
+    const LUser1TextConversationArea = document.getElementById("user_1_text_conversation_area");
+    const LUser2TextConversationArea = document.getElementById("user_2_text_conversation_area");
+
+    if (LTextInputFromUser1.trim().length > 0) {
+        GMessageObj.addMessage(LTextInputFromUser1, 1);
+        pvtSendMessage(LTextInputFromUser1, 1, LUser1TextConversationArea, LUser2TextConversationArea);
+    } else {
+        alert("Please enter a message");
+    }
+}
+
+function pvtUser2MessageSend() {
+    const LTextInputFromUser2 = GUser2MessageInput.value;
+
+    const LUser1TextConversationArea = document.getElementById("user_1_text_conversation_area");
+    const LUser2TextConversationArea = document.getElementById("user_2_text_conversation_area");
+
+    if (LTextInputFromUser2.trim().length > 0) {
+        GMessageObj.addMessage(LTextInputFromUser2, 2);
+        pvtSendMessage(LTextInputFromUser2, 2, LUser2TextConversationArea, LUser1TextConversationArea);
+    } else {
+        alert('Please enter a message');
+    }
+}
+
+const reset = (e) => {
+    const LPlaceholderTextLeft = document.getElementById("temp-placeholder-text-left");
+    const LPlaceholderTextRight = document.getElementById("temp-placeholder-text-right");
+
+    const LUser1TextConversationArea = document.getElementById("user_1_text_conversation_area");
+    const LUser2TextConversationArea = document.getElementById("user_2_text_conversation_area");
+
+    if (e.target.classList.contains("left")) {
+        LUser1TextConversationArea.innerHTML = "";
+        pvtApplyTemplateLayer(LPlaceholderTextLeft);
+    } else {
+        LUser2TextConversationArea.innerHTML = "";
+        pvtApplyTemplateLayer(LPlaceholderTextRight);
+    }
+};
+
+
+function pvtUser1EnterKeyEvent(event) {
+    if (event.shiftKey && event.key === 'Enter') {
+        return;
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        pvtUser1MessageSend();
+    }
+}
+
+function pvtUser2EnterKeyEvent(event) {
+    if (event.shiftKey && event.key === 'Enter') {
+        return;
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        pvtUser2MessageSend();
+    }
+}
+
+
+function pvtScrollToBottom() {
+    const LScrollContainer1 = document.getElementById("user_1_textarea");
+    const LScrollContainer2 = document.getElementById("user_2_textarea");
+    LScrollContainer1.scrollTop = LScrollContainer1.scrollHeight;
+    LScrollContainer2.scrollTop = LScrollContainer2.scrollHeight;
+}
+
+function pvtFormatDate(date) {
+    const options = {
+        day: "numeric",
+        month: "short",
+        year: "2-digit",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*let p_user1_input_text = document.getElementById("user_1_input_text");
 let p_user2_input_text = document.getElementById("user_2_input_text");
 
 const User1_TextArea = document.getElementById("user_1_textarea");
@@ -208,3 +410,4 @@ console.log(typeof formattedDate);
 //   const now = new Date();
 //   return `${now.getHours()}:${now.getMinutes()}`;
 // };
+*/
