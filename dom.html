@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
+    <title>DOM Manipulation</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: rgb(246, 242, 238);
+            border: 5px solid #55d3fd;
+            font-family: Arial, Helvetica, sans-serif;
+            position: absolute;
+            height: fit-content;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            overflow: auto;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--  -->
+
+    <!-- <div class="start-app-div w-[95vw] bg-green-300" id="start_application_div">
+        <button type="button" class="btn bg-blue-300 rounded-sm p-1 m-6" id="start-app-btn">Start
+            Application</button>
+    </div>
+    <div class="container flex  flex-col flex-wrap width-screen ">
+        <div class="form flex flex-1 flex-col w-[90vw] p-2 self-center bg-blue-100 ">
+
+            <div class="selectors flex-row flex md:w-[50%] self-center bg-blue-300 justify-around py-3 my-8">
+                <div class="div p-1">
+                    <label>
+                        <input type="radio" name="option" id="selected-div" onchange="checking()">
+                        Using DIV
+                    </label>
+                </div>
+                <div class="div p-1">
+                    <label>
+                        <input type="radio" name="option" id="'selected-table">
+                        Using Table
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-section bg-green-300 self-center p-5 md:w-[50%]">
+                <form action="#">
+                    <input type="text" class="first-name m-5" id="f-name" placeholder="First Name" required>
+                    <input type="text" class="last-name m-5" id="l-name" placeholder="Last Name" required>
+                    <button type="submit" class="btn bg-gray-300 m-5" id="add-user-btn">Add User</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-section w-[95vw] flex flex-1 flex-col   bg-green-300">
+            <div class="p-1 m-2 font-bold bg-gray-500">
+                <span>User List</span>
+            </div>
+            <div class="data-display  bg-gray-300 h-60 overflow-auto m-2" id="data-display-area">
+                <table class="min-w-full">
+                    <thead class="bg-white border-b">
+                        <tr>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                #
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                First
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                Last
+                            </th>
+                            <th scope="col" class="text-sm font-bold text-gray-900 px-6 py-4 text-left">
+                                Delete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-100 border-b">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Mark
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Otto
+                            </td>
+                            <td id="test" class="text-sm font-light px-6 py-4 text-blue-900">
+                                <a class=" cursor-pointer underline hover:text-blue-100 ">Delete</a>
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Jacob
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Dillan
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                @fat
+                            </td>
+                        </tr>
+                        <tr class="bg-gray-100 border-b">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Mark
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Twen
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                @twitter
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">4</td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Bob
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                Dillan
+                            </td>
+                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                @fat
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="generate-json self-end m-4 p-2 ">
+            <button type="button" id="generate-json-btn" class="bg-gray-300">Generate JSON</button>
+        </div>
+    </div> -->
+
+
+    <!-- <script>
+        let test = document.getElementById("test");
+        test.innerHTML = '<a class=" cursor-pointer underline hover:text-blue-100 ">Delete</a>'
+    </script> -->
+
+    <script  src="./display.js"></script>
+    <script  src="./data.js"></script>
+</body>
+
+</html>
