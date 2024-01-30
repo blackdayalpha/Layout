@@ -1,14 +1,8 @@
 window.onload = function () {
     let isClicked = false;
-    let LStartAppDiv = document.createElement('div');
-    LStartAppDiv.className = 'start-app-div w-[95vw] ';
-    LStartAppDiv.id = 'start_application_div';
+    let LStartAppDiv = createDivElement('start-app-div w-[95vw]', 'start_application_div');
 
-    let LStartAppBtn = document.createElement('button');
-    LStartAppBtn.className = 'btn bg-blue-300 rounded-sm p-1 m-6';
-    LStartAppBtn.id = 'start-app-btn';
-    LStartAppBtn.textContent = 'Start Application';
-    LStartAppBtn.type = 'button';
+    let LStartAppBtn = createButton('btn bg-blue-300 rounded-sm p-1 m-6', 'start-app-btn', 'Start Application');
     LStartAppBtn.addEventListener('click', () => {
         if (!isClicked) {
             isClicked = true;
@@ -19,84 +13,32 @@ window.onload = function () {
     });
 
     LStartAppDiv.appendChild(LStartAppBtn);
-
     document.body.appendChild(LStartAppDiv);
 }
 
 function pvtStartApplication() {
-    let LExternalContainer = document.createElement('div');
-    LExternalContainer.className = 'container flex  flex-col flex-wrap width-screen';
+    let LExternalContainer = createDivElement('container flex flex-col flex-wrap width-screen');
 
-    let LFormContainer = document.createElement('div');
-    LFormContainer.className = 'form flex flex-1 flex-col w-[90vw] p-2 self-center bg-blue-100 ';
+    let LFormContainer = createDivElement('form flex flex-1 flex-col w-[90vw] p-2 self-center bg-blue-100');
+    let LOptionContainer = createDivElement('selectors md:flex-row flex-col flex md:w-[50%] self-center bg-blue-300 justify-around py-3 my-8');
 
-    let LOptionContainer = document.createElement('div');
-    LOptionContainer.className = 'selectors md:flex-row flex-col flex md:w-[50%] self-center bg-blue-300 justify-around py-3 my-8';
+    let LRadio1Container = createDivElement('p-1');
+    let LRadio1OptionLbl = createRadioLabel('Using DIV', 'change', 'option', pvtgenerateDivContent);
+    LRadio1Container.appendChild(LRadio1OptionLbl);
 
-    // using div
-    let LRadio1Container = document.createElement('div');
-    LRadio1Container.className = 'p-1';
+    let LRadio2Container = createDivElement('p-1');
+    let LRadio2OptionLbl = createRadioLabel('Using Table', 'change', 'option', pvtGenerateTable);
+    LRadio2Container.appendChild(LRadio2OptionLbl);
 
-    let LRadio1OptionLbl = document.createElement('label');
-    let LRadio1Input = document.createElement('input');
-    LRadio1Input.type = 'radio';
-    LRadio1Input.name = 'option';
-    LRadio1Input.addEventListener('change', pvtgenerateDivContent);
-    LRadio1Input.title = 'Using DIV';
-    LRadio1OptionLbl.appendChild(LRadio1Input);
-    LRadio1OptionLbl.appendChild(document.createTextNode('Using DIV'));
-
-    LRadio1Container.appendChild(LRadio1OptionLbl)
-
-    // using table
-    let LRadio2Container = document.createElement('div');
-    LRadio2Container.className = 'p-1';
-
-    let LRadio2OptionLbl = document.createElement('label');
-    let LRadio2Input = document.createElement('input');
-    LRadio2Input.type = 'radio';
-    LRadio2Input.name = 'option';
-    LRadio2Input.addEventListener('change', () => {
-        let area = document.getElementById('data-display-area');
-        area.innerHTML = '';
-        area.appendChild(pvtGenerateTable())
-    });
-    LRadio2Input.title = 'Using Table';
-    LRadio2OptionLbl.appendChild(LRadio2Input);
-    LRadio2OptionLbl.appendChild(document.createTextNode('Using Table'));
-
-    LRadio2Container.appendChild(LRadio2OptionLbl)
-
-    // appending in options label
     LOptionContainer.appendChild(LRadio1Container);
     LOptionContainer.appendChild(LRadio2Container);
 
-    // input form
-    let LInputContainer = document.createElement('div');
-    LInputContainer.className = 'input-section self-center p-5 md:w-[50%] ';
+    let LInputContainer = createDivElement('input-section self-center p-5 md:w-[50%]');
+    let LFormElement = createFormElement('submit', pvtAddUser);
 
-    let LFormElement = document.createElement('form');
-
-    let LFirstNameInput = document.createElement('input');
-    LFirstNameInput.className = 'first-name m-5';
-    LFirstNameInput.type = 'text';
-    LFirstNameInput.placeholder = 'First Name';
-    LFirstNameInput.id = 'first_name';
-    LFirstNameInput.required = true;
-
-    let LLastNameInput = document.createElement('input');
-    LLastNameInput.className = 'last-name m-5';
-    LLastNameInput.type = 'text';
-    LLastNameInput.placeholder = 'Last Name';
-    LLastNameInput.id = 'last_name';
-    LLastNameInput.required = true;
-
-    let LSubmitDataBtn = document.createElement('button');
-    LSubmitDataBtn.className = 'btn bg-blue-300 rounded-sm p-1 m-6';
-    LSubmitDataBtn.id = "add-user-btn";
-    LSubmitDataBtn.type = 'submit';
-    LSubmitDataBtn.addEventListener('click', pvtAddUser);
-    LSubmitDataBtn.textContent = 'ADD USER';
+    let LFirstNameInput = createInputElement('text', 'First Name', 'first_name', true);
+    let LLastNameInput = createInputElement('text', 'Last Name', 'last_name', true);
+    let LSubmitDataBtn = createButton('btn bg-blue-300 rounded-sm p-1 m-6', 'add-user-btn', 'ADD USER');
 
     LFormElement.appendChild(LFirstNameInput);
     LFormElement.appendChild(LLastNameInput);
@@ -107,31 +49,16 @@ function pvtStartApplication() {
     LFormContainer.appendChild(LOptionContainer);
     LFormContainer.appendChild(LInputContainer);
 
+    let LTableContainer = createDivElement('table-section w-[95vw] flex flex-1 flex-col');
 
-    // Table container
-    let LTableContainer = document.createElement('div');
-    LTableContainer.className = 'table-section w-[95vw] flex flex-1 flex-col   ';
-
-    let LTitle = document.createElement('div')
-    LTitle.className = 'p-1 m-2 font-bold bg-gray-500';
-    LTitle.textContent = 'User List';
-
-    let LDisplayArea = document.createElement('div');
-    LDisplayArea.className = 'data-display  bg-gray-300 h-60 overflow-auto m-2';
-    LDisplayArea.id = 'data-display-area'
+    let LTitle = createDivElement('p-1 m-2 font-bold bg-gray-500', 'User List');
+    let LDisplayArea = createDivElement('data-display bg-gray-300 h-60 overflow-auto m-2', 'data-display-area');
 
     LTableContainer.appendChild(LTitle);
     LTableContainer.appendChild(LDisplayArea);
 
-    let LGenerateJsonDiv = document.createElement('div');
-    LGenerateJsonDiv.className = 'btn generate-json self-end bg-blue-300 rounded-sm p-1 m-6';
-
-    let LGenerateJSONBtn = document.createElement('button');
-    LGenerateJSONBtn.textContent = 'Generate JSON';
-    LGenerateJSONBtn.type = 'button';
-    LGenerateJSONBtn.id = 'generate-json-btn';
-    LGenerateJSONBtn.className = 'btn generate-json btn bg-blue-300 rounded-sm p-1 m-6';
-
+    let LGenerateJsonDiv = createDivElement('btn generate-json self-end bg-blue-300 rounded-sm p-1 m-6');
+    let LGenerateJSONBtn = createButton('btn generate-json btn bg-blue-300 rounded-sm p-1 m-6', 'generate-json-btn', 'Generate JSON');
     LGenerateJsonDiv.appendChild(LGenerateJSONBtn);
 
     LExternalContainer.appendChild(LFormContainer)
@@ -141,65 +68,117 @@ function pvtStartApplication() {
     return LExternalContainer;
 }
 
+function pvtAddUser(event) {
 
-function pvtAddUser() {
+    event.preventDefault();
     let LFirstNameInput = document.getElementById('first_name');
     let LLastNameInput = document.getElementById('last_name');
+    if (pvtValidateInputString(LFirstNameInput.value, LLastNameInput.value)) {
+        console.log(LFirstNameInput.value)
+        let LIndexOfCurrEntry = GDataObj.UserData.length;
+        let LDataArr = [];
+        LDataArr.push(LFirstNameInput.value);
+        LDataArr.push(LLastNameInput.value);
+        LDataArr.push('<a class="cursor-pointer underline hover:text-blue-100" onclick="pvtDeleteElement(event)" title="delete">Delete</a>');
 
+        GDataObj.UserData.push({ data: LDataArr });
+        LFirstNameInput.value = ''
+        LLastNameInput.value = ''
+        console.log(GDataObj.UserData)
 
+        pvtGenerateTable();
 
-    LFirstNameInput.textContent = ''
-    LLastNameInput.textContent = ''
+    } else {
+        alert('Please enter valid data');
+    }
+}
 
+function pvtDeleteElement(event) {
+    let child = event.target.parentElement.parentElement;
+    let parent = child.parentNode;
+    let index = Array.prototype.indexOf.call(parent.children, child);
+
+    GDataObj.UserData.splice(index, 1);
+    pvtGenerateTable();
+
+}
+
+function pvtValidateInputString(p_strFirstName, p_strLastName) {
+    const regex = /^[A-Za-z][a-z]*$/;
+    if (regex.test(p_strFirstName.trim()) && regex.test(p_strLastName.trim())) {
+        return true;
+    } else return false;
+}
+
+function pvtCreateListElement() {
+
+    // create li element
+    const LListElement = document.createElement("li");
+
+    // add the details to the elements
+    LListElement.className = "collection-item  teal lighten-2 border-all";
+    LListElement.id = "new-item";
+    LListElement.title = "New Item";
+
+    // onclick event to assign the task as completed
+    LListElement.onclick = pvtTaskDone;
+    LListElement.appendChild(document.createTextNode(p_strInputTaskText));
+    // creating anchor tag
+    const LAnchorElement = document.createElement("a");
+
+    LAnchorElement.className = "delete-item secondary-content";
+    LAnchorElement.innerHTML = '<i class="fa fa-remove"></i>';
+    // appending anchor tag to the li
+    LListElement.appendChild(LAnchorElement);
+    // returning the final element created
+    return LListElement;
 }
 
 function pvtGenerateTable() {
     console.log('Generating table');
     let LTableHeadClass = "text-sm font-bold text-gray-900 px-6 py-4 text-left";
     let LTableHeadScope = 'col';
-    let LTableHeadingName = ['#', 'First Name', 'Last Name', 'Delete'];
+    let LTableHeadingName = ['First Name', 'Last Name', 'Delete'];
 
-    const LTableElement = document.createElement('table');
-    LTableElement.className = "min-w-full";
+    const LTableElement = createTableElement("min-w-full");
 
-    LTHeadElement = document.createElement('thead');
-    LTHeadElement.className = 'bg-white border-b';
+    LTHeadElement = createTableHeadElement('bg-white border-b');
 
-    LTableHeadRow = document.createElement('tr');
+    LTableHeadRow = createTableRowElement();
 
     for (let i = 0; i < LTableHeadingName.length; i++) {
-        let LTableHeadCell = document.createElement('th');
-        LTableHeadCell.className = LTableHeadClass;
-        LTableHeadCell.scope = LTableHeadScope;
-        LTableHeadCell.textContent = LTableHeadingName[i];
+        let LTableHeadCell = createTableHeadCell(LTableHeadClass, LTableHeadScope, LTableHeadingName[i]);
         LTableHeadRow.appendChild(LTableHeadCell);
     }
 
     LTHeadElement.appendChild(LTableHeadRow);
     LTableElement.appendChild(LTHeadElement);
 
-
+    let LDataObject = GDataObj;
     let LTableBodyElement = document.createElement('tbody');
-    let LDataArr = pvtGetAllUserDataInTable(GDataObj, 'table');
+    let LDataArr = pvtGetAllUserDataInTable(LDataObject, 'table');
     for (let key of LDataArr) {
         LTableBodyElement.appendChild(key);
     }
     LTableElement.appendChild(LTableBodyElement);
 
-    return LTableElement;
+
+    let LArea = document.getElementById('data-display-area');
+    LArea.innerHTML = '';
+    LArea.appendChild(LTableElement);
+
 }
 
 function pvtgenerateDivContent() {
     console.log('Div content generated');
 }
 
-
 function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
     console.log('Get all user data')
     let bool = true;
     let LTableBodyElementArr = [];
     for (let i = 0; i < p_objData.UserData.length; i++) {
-        let LTableRowElement = document.createElement('tr');
+        let LTableRowElement = createTableRowElement();
         if (bool) {
             LTableRowElement.className = 'bg-gray-100 border-b';
             bool = false;
@@ -207,14 +186,13 @@ function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
             LTableRowElement.className = 'bg-white border-b';
             bool = true;
         }
-        let LDataArr = p_objData.UserData[i]['data'];
-        let LTraverse = p_objData.UserData[i][p_strDisplayType].AllElement;
+        let LDataArr = p_objData.UserData[i].data;
+        let LTraverse = p_objData[p_strDisplayType];
         let LElementIndex = 0;
+        console.log(LDataArr)
         for (let index = 0; index < LDataArr.length; index++) {
             if (index == 3) LElementIndex = 1;
-            const LTableData = document.createElement(`${LTraverse[LElementIndex].tagName}`);
-            LTableData.className = LTraverse[LElementIndex].className;
-            LTableData.innerHTML = LDataArr[index];
+            const LTableData = createTableDataElement(`${LTraverse[LElementIndex].tagName}`, LTraverse[LElementIndex].className, LDataArr[index]);
             LTableRowElement.appendChild(LTableData);
         }
         LTableBodyElementArr.push(LTableRowElement);
@@ -223,77 +201,96 @@ function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
     return LTableBodyElementArr;
 }
 
+function createDivElement(className, id = null) {
+    let div = document.createElement('div');
+    div.className = className;
+    if (id) div.id = id;
+    return div;
+}
+
+function createButton(className, id, textContent) {
+    let button = document.createElement('button');
+    button.className = className;
+    button.id = id;
+    button.textContent = textContent;
+    return button;
+}
+
+function createRadioLabel(textContent, eventType, name, eventHandler) {
+    let label = document.createElement('label');
+    let input = createInputElement('radio', null, null, null);
+    input.addEventListener(eventType, eventHandler);
+    input.title = textContent;
+    input.name = name;
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(textContent));
+    return label;
+}
+
+function createFormElement(eventType, eventHandler) {
+    let form = document.createElement('form');
+    form.addEventListener(eventType, eventHandler);
+    return form;
+}
+
+function createInputElement(type, placeholder, id, required) {
+    let input = document.createElement('input');
+    input.type = type;
+    if (placeholder) input.placeholder = placeholder;
+    if (id) input.id = id;
+    if (required) input.required = required;
+    return input;
+}
+
+function createTableElement(className) {
+    let table = document.createElement('table');
+    table.className = className;
+    return table;
+}
+
+function createTableHeadElement(className) {
+    let thead = document.createElement('thead');
+    thead.className = className;
+    return thead;
+}
+
+function createTableRowElement() {
+    return document.createElement('tr');
+}
+
+function createTableHeadCell(className, scope, textContent) {
+    let th = document.createElement('th');
+    th.className = className;
+    th.scope = scope;
+    th.textContent = textContent;
+    return th;
+}
+
+function createTableDataElement(tagName, className, innerHTML) {
+    let td = document.createElement(tagName);
+    td.className = className;
+    td.innerHTML = innerHTML;
+    return td;
+}
+
+
 const GDataObj = {
     UserData: [
-        {
-            data: ['1', 'Dipesh', 'Marathe', '<a class="cursor-pointer underline hover:text-blue-100" onclick="pvtDeleteElement()">Delete</a>'],
-            table: {
-                AllElement: [
-                    {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm font-light px-6 py-4 text-blue-900'
-                    }
-                ]
-            },
-            div: {
-                AllElement: [
-                    {
-                        tagName: 'td',
-                        className: 'px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900',
-                        innerHTML: '1'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-                        innerHTML: 'Dipesh'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-                        innerHTML: 'Marathe'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm font-light px-6 py-4 text-blue-900',
-                        innerHTML: '<a class=" cursor-pointer underline hover:text-blue-100 ">Delete</a>'
-                    }
-                ]
-            }
+        // {
+        //     data: ['1', 'Dipesh', 'Marathe', 'Delete'],
+        // }, {
+        //     data: ['2', 'Mayur', 'Kumavat', 'Delete'],
+        // }
+    ],
 
-        }, {
-            data: ['2', 'Mayur', 'Kumavat', '<a class="cursor-pointer underline hover:text-blue-100" onclick="pvtDeleteElement()">Delete</a>'],
-            table: {
-                AllElement: [
-                    {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm font-light px-6 py-4 text-blue-900',
-                    }
-                ]
-            },
-            div: {
-                AllElement: [
-                    {
-                        tagName: 'td',
-                        className: 'px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900',
-                        innerHTML: '1'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-                        innerHTML: 'Dipesh'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-                        innerHTML: 'Marathe'
-                    }, {
-                        tagName: 'td',
-                        className: 'text-sm font-light px-6 py-4 text-blue-900',
-                        innerHTML: '<a class=" cursor-pointer underline hover:text-blue-100 ">Delete</a>'
-                    }
-                ]
-            }
+    table: [{
+        tagName: 'td',
+        className: 'text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap',
+    }, {
+        tagName: 'td',
+        className: 'text-sm font-light px-6 py-4 text-blue-900',
+    }],
+    div: {
 
-        }],
-} 
+    }
+}
