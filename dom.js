@@ -1,33 +1,70 @@
-let GJSONStr;
+let GDataHeadElement, GListHeadElement;
+const GINPUT_DATA_ROW = 2;
 
+/**
+ * @property {UserData} - This is an Array of an objects Which consist of Array of with property as 'data'
+ * @property {anchor} - This is the HTML text for the delete button
+ * @property {table} - This is an Object having 2 properties i.e. @property {tagName} and @property {className}
+ * @property {div}- This is an Object having 2 properties i.e. @property {tagName} and @property {className} 
+ * 
+ */
+let GDataObj = {
+    UserData: [
+    ],
+    anchor: '<a class="delete cursor-pointer font-bold  hover:text-red-500" onclick="pvtRemoveRow()" title="delete">&#x2715;</a>',
+    table: {
+        tagName: 'td',
+        className: 'text-sm border-solid border-2 border-black text-center text-gray-900 font-light px-6 py-4 whitespace-nowrap',
+    },
+    div: {
+        tagName: 'div',
+        className: 'div text-sm table-cell  text-center flex-1 max-width-xs text-gray-900 font-light md:px-3 md:py-4 px-3 py-2 whitespace-wrap',
+    },
+}
+
+// This Function loads when HTML page is loaded
 window.onload = function () {
     let isClicked = false;
-    let LStartAppDiv = pvtCreateDivElement('start-app-div w-[95vw] h-[15%]', 'start_application_div');
 
+    let LStartAppDiv = pvtCreateDivElement('start-app-div w-[95vw] h-[15%]', 'start_application_div');
     let LStartAppBtn = pvtCreateButton('btn font-bold bg-blue-300 rounded-sm p-2 m-6', 'start-app-btn', 'Start Application', null, "Click to Start Application");
+
+    // Event handlers for Checking that the application is started only once
     LStartAppBtn.addEventListener('click', () => {
         if (!isClicked) {
             isClicked = true;
+            // appends the return Node of the passed Function
             document.body.appendChild(pvtStartApplication());
         } else {
             alert('Application already started');
         }
     });
 
+
     LStartAppDiv.appendChild(LStartAppBtn);
     document.body.appendChild(LStartAppDiv);
 }
 
+/**
+ * This Function generates the Main body of the application
+ * @returns {Node} - Containing the functional structure of the application
+*  Rather than writing raw HTML, this function generates the HTML Tags along with its attributes and is Nested thoroughly.
+ */
 function pvtStartApplication() {
-    let LExternalContainer = pvtCreateDivElement(' flex flex-col flex-wrap  min-h-screen');
+    // External Container containing 3 divs i.e. 
+    //  Form , Display and JSon Handlers
+    let LExternalContainer = pvtCreateDivElement('flex flex-col flex-wrap  min-h-screen   relative');
 
-    let LFormContainer = pvtCreateDivElement('form flex flex-1 flex-col w-[90vw]  h-[25%] p-2 self-center justify-center bg-blue-100');
+    // Formation of Form container with it's inner Elements
+    let LFormContainer = pvtCreateDivElement('form relative flex flex-1 flex-col w-[90vw]  h-[25%] p-2 self-center justify-center bg-blue-100');
+    // Label 1 container
     let LOptionContainer = pvtCreateDivElement('selectors md:flex-row flex-col flex md:w-[50%] self-center bg-[#8DCBE6] border-b justify-around py-3 my-8');
-
     let LRadio1Container = pvtCreateDivElement('p-1 m-1');
-    let LRadio1OptionLbl = pvtCreateRadioLabel('Using DIV', 'change', 'option', pvtgenerateDivContent, 'div-radio');
+    let LRadio1OptionLbl = pvtCreateRadioLabel('Using DIV', 'change', 'option', pvtGenerateDivContent, 'div-radio');
+
     LRadio1Container.appendChild(LRadio1OptionLbl);
 
+    // label 2 container
     let LRadio2Container = pvtCreateDivElement('p-1 m-1');
     let LRadio2OptionLbl = pvtCreateRadioLabel('Using Table', 'change', 'option', pvtGenerateTable, 'table-radio');
     LRadio2Container.appendChild(LRadio2OptionLbl);
@@ -35,9 +72,10 @@ function pvtStartApplication() {
     LOptionContainer.appendChild(LRadio1Container);
     LOptionContainer.appendChild(LRadio2Container);
 
+    // Input form Container
     let LInputContainer = pvtCreateDivElement('input-section self-center p-5 md:w-[50%]');
     let LFormElement = pvtCreateFormElement('submit', pvtAddUser);
-
+    // Input form 
     let LFirstNameInput = pvtCreateInputElement('text', 'First Name', 'first_name', true, "m-1");
     let LLastNameInput = pvtCreateInputElement('text', 'Last Name', 'last_name', true, 'm-1');
     let LSubmitDataBtn = pvtCreateButton('btn bg-blue-300 rounded-sm p-2 m-6 text-nowrap font-bold', 'add-user-btn', 'ADD USER', null, 'Click to add user');
@@ -51,197 +89,238 @@ function pvtStartApplication() {
     LFormContainer.appendChild(LOptionContainer);
     LFormContainer.appendChild(LInputContainer);
 
-    let LTableContainer = pvtCreateDivElement('table-section justify-center w-[95vw]  h-[30%] flex flex-1 flex-col');
+
+    // Display Area Container
+    LShowDiv = pvtCreateDivElement("flex relative flex-1 md:flex-row flex-col md:w-[95vw] h-[35vh] ", 'displayer')
+
+    // Table Display Area Container
+    let LTableContainer = pvtCreateDivElement('table-section justify-center md:w-[45vw] w-[95vw]  h-[100%] flex flex-1 flex-col');
 
     let LTitle = pvtCreateDivElement('p-1 m-2 font-bold bg-[#8DCBE6] ', null, 'User List');
     let LDisplayArea = pvtCreateDivElement('data-display bg-gray-300 h-60 overflow-auto m-2', 'data-display-area');
 
     LTableContainer.appendChild(LTitle);
     LTableContainer.appendChild(LDisplayArea);
+    LShowDiv.appendChild(LTableContainer);
 
-
-    let LGenerateJsonDiv = pvtCreateDivElement('flex justify-center  flex-1 md:h-[10%] bg-grey-100  lg:h-[25%] md:flex-row flex-col generate-json   rounded-sm p-1 m-6');
+    // Json Display Area Container
+    LTableContainer = pvtCreateDivElement('table-section justify-center md:w-[45vw] w-[95vw]  h-[80%] flex flex-1 flex-col');
+    LTitle = pvtCreateDivElement('p-1 m-2 font-bold bg-[#8DCBE6] ', null, 'JSON');
     let LJsonTextArea = pvtCreateTextBoxElement();
-    let LButtonDiv = pvtCreateDivElement('flex flex-col  items-start flex-1');
+    LTableContainer.appendChild(LTitle);
+    LTableContainer.appendChild(LJsonTextArea);
+    LShowDiv.appendChild(LTableContainer);
+
+    // JSON Handler  Container
+    let LGenerateJsonDiv = pvtCreateDivElement('flex relative justify-center item-center flex-1 md:h-[10%] bg-grey-100  lg:h-[25%] md:flex-row flex-col generate-json items-center  rounded-sm p-1 m-6');
+
     let LGenerateJSONBtn = pvtCreateButton('generate-json h-min btn bg-blue-300 font-bold rounded-sm p-2 m-6 text-nowrap', 'generate-json-btn', 'Generate JSON', pvtGenerateJSON, "Generate JSON");
-    let LAddNewJsonDataBtn = pvtCreateButton('generate-json h-min w-max hidden btn bg-blue-300 font-bold rounded-sm p-2 m-6 text-nowrap', 'json-data-add', 'Updata Data', pvtUpdataObjectData, "Update Object");
-    LButtonDiv.appendChild(LGenerateJSONBtn);
-    LButtonDiv.appendChild(LAddNewJsonDataBtn);
-    LGenerateJsonDiv.appendChild(LJsonTextArea);
-    // LGenerateJsonDiv.appendChild(LGenerateJSONBtn);
-    LGenerateJsonDiv.appendChild(LButtonDiv);
+    let LAddNewJsonDataBtn = pvtCreateButton('generate-json h-min w-max btn bg-blue-300 font-bold rounded-sm p-2 m-6 text-nowrap', 'json-data-add', 'Updata Data', pvtUpdataObjectData, "Update Object");
+
+    LGenerateJsonDiv.appendChild(LGenerateJSONBtn);
+    LGenerateJsonDiv.appendChild(LAddNewJsonDataBtn);
 
     LExternalContainer.appendChild(LFormContainer)
-    LExternalContainer.appendChild(LTableContainer)
+    LExternalContainer.appendChild(LShowDiv)
     LExternalContainer.appendChild(LGenerateJsonDiv);
 
     return LExternalContainer;
 }
 
+/**
+ * 
+ * @param {event} - To prevent it's default behavior 
+ * 
+ * Checks the input data and adds the data to the Object
+ * It calls displayer function
+ */
 function pvtAddUser(event) {
 
     event.preventDefault();
+    // Updated Input Data
     let LFirstNameInput = document.getElementById('first_name');
     let LLastNameInput = document.getElementById('last_name');
 
-
-
     let LIsRadioSelected = pvtCheckSelection();
-    if (pvtValidateInputString(LFirstNameInput.value.trim(), LLastNameInput.value.trim())) {
-        // console.log(LFirstNameInput.value)
-        let LIndexOfCurrEntry = GDataObj.UserData.length;
-        let LDataArr = [];
-        LDataArr.push(LFirstNameInput.value);
-        LDataArr.push(LLastNameInput.value);
+    // Checks for Proper Data Input
+    if (LIsRadioSelected && pvtValidateInputString(LFirstNameInput.value.trim()) && pvtValidateInputString(LLastNameInput.value.trim())) {
 
+        // Array to give as input to the object
+        // It is ensured that data is in proper format
+
+        let LDataArr = [];
+        LDataArr.push(LFirstNameInput.value.trim());
+        LDataArr.push(LLastNameInput.value.trim());
         GDataObj.UserData.push({ data: LDataArr });
-        // console.log(GDataObj.UserData)
-        // let LTempObj = JSON.stringify(GDataObj, null, 2);
-        // GDataObj = JSON.parse(LTempObj);
+
+        // Display the Data
         pvtDisplayDataInDiv();
 
-    } else if (!LIsRadioSelected) { alert('select an option to display data') } else {
+    }
+    // If The Radio is not selected then this case is entered
+    else if (!LIsRadioSelected) {
+        alert('select an option to display data')
+    }
+    // Testing for Edge cases
+    else {
         alert('Please enter valid data');
     }
-
+    // Clearing the present values
     LFirstNameInput.value = ''
     LLastNameInput.value = ''
 }
 
-function pvtDisplayDataInDiv() {
+/* Adders and Removers */
 
+// Deletes the data from the object and updates the table
+function pvtRemoveRow() {
+    // event.preventDefault();
+    let LChoice = confirm('Do you want to delete?');
+    if (LChoice) {
+        let LEventClassList = event.target;
+        // checking for the proper target
+        if (LEventClassList.classList.contains('delete')) {
+            let child = LEventClassList.parentElement.parentElement;
+            let parent = child.parentNode;
+            let index = pvtGetIndexOfSelectedItem(parent, child)
+            // deleting the data from the Object
+            GDataObj.UserData.splice(index, 1);
+            // display the data
+            pvtDisplayDataInDiv()
+        } else {
+            alert('Delete Not Found!')
+        }
+    } else {
+        // edge case
+        console.error('not deleted');
+    }
+
+}
+
+//Based on the selection this function calls the appropriate displayer function 
+function pvtDisplayDataInDiv() {
+    // getting current selection
     const LDivRadioBtn = document.getElementById('div-radio');
     const LTableRadioBtn = document.getElementById('table-radio');
+
     if (LDivRadioBtn.checked) {
-        pvtgenerateDivContent();
+        pvtGenerateDivContent();
     } else if (LTableRadioBtn.checked) {
         pvtGenerateTable();
     }
 }
 
-function pvtCheckSelection() {
-    const LDivRadioBtn = document.getElementById('div-radio');
-    const LTableRadioBtn = document.getElementById('table-radio');
-    if (LDivRadioBtn.checked || LTableRadioBtn.checked)
-        return true
-    else return false;
-}
+/**  Generators */
 
-function pvtDeleteElement(event) {
 
-    event.preventDefault();
-    let LChoice = confirm('Do you want to delete?');
-    if (LChoice) {
 
-        let child = event.target.parentElement.parentElement;
-        let parent = child.parentNode;
-        let index = pvtGetIndexOfSelectedItem(parent, child)
-
-        GDataObj.UserData.splice(index, 1);
-        pvtDisplayDataInDiv()
-    } else {
-        return;
-    }
-
-}
-
-function pvtValidateInputString(p_strFirstName, p_strLastName) {
-    const regex = /^[A-Za-z][a-z]*$/;
-    const LFNameLength = p_strFirstName.length;
-    const LLNameLength = p_strLastName.length;
-    if (regex.test(p_strFirstName) && regex.test(p_strLastName) && LFNameLength > 1 && LFNameLength < 25 && LLNameLength > 1 && LLNameLength < 25) {
-        return true;
-    } else return false;
-}
-
+/**
+ * @returns {void} - It generates the basic structure of the Table 
+ */
 function pvtGenerateTable() {
-    console.log('Generating table');
-    let LTableHeadClass = "text-sm font-bold border-solid border-2 text-center text-[#4F200D] bg-[#9DF1DF]  px-6 py-4 text-left";
-    let LTableHeadScope = 'col';
-    let LTableHeadingName = ['First Name', 'Last Name', 'Delete'];
+    const LTableElement = pvtCreateTableElement("min-w-full border-collapse");
+    // Checks if Table Header is already generated or not
+    pvtCreateTableHeaderIfNeeded();
 
-    const LTableElement = pvtCreateTableElement("min-w-full");
-
-    LTHeadElement = pvtCreateTableHeadElement('bg-white border-b');
-
-    LTableHeadRow = pvtCreateTableRowElement();
-
-    for (let i = 0; i < LTableHeadingName.length; i++) {
-        let LTableHeadCell = pvtCreateTableHeadCell(LTableHeadClass, LTableHeadScope, LTableHeadingName[i]);
-        LTableHeadRow.appendChild(LTableHeadCell);
-    }
-
-    LTHeadElement.appendChild(LTableHeadRow);
-    LTableElement.appendChild(LTHeadElement);
+    LTableElement.appendChild(GDataHeadElement);
 
     let LDataObject = GDataObj;
     let LTableBodyElement = document.createElement('tbody');
     let LDataArr = pvtGetAllUserDataInTable(LDataObject, 'table');
-    for (let key of LDataArr) {
+
+    LDataArr.forEach(key => {
         LTableBodyElement.appendChild(key);
-    }
+    });
+    // appends table body
     LTableElement.appendChild(LTableBodyElement);
 
-
-    let LArea = document.getElementById('data-display-area');
-    LArea.innerHTML = '';
-    LArea.appendChild(LTableElement);
-
+    // Displays the Table to the Display Area
+    pvtAppendDataToArea(LTableElement);
 }
 
-function pvtgenerateDivContent() {
-    console.log('generating div Table')
-    let LDivHeadClass = "md:text-sm text-xs text-center bg-[#9DF1DF] flex-1 max-width-xs font-bold flex-1 text-gray-900 px-6 py-4 text-left"
-    let LDivHeadingName = ['First Name', 'Last Name', 'Delete'];
+/**
+ * @returns {void} - It generates the basic structure of the Div Data
+ */
+function pvtGenerateDivContent() {
+    const LDivULElement = pvtCreateDivElement('div min-w-full table', null, null);
+    // Checks if Div Header is already generated or not
+    pvtCreateDivHeaderIfNeeded();
 
-    const LDivULElement = pvtCreateULElement('min-w-full');
-
-    let LListElement = pvtCreateListElement("bg-white border-b flex justify-around");
-
-    for (let i = 0; i < LDivHeadingName.length; i++) {
-        let LDivHeadCell = pvtCreateSpanElement(LDivHeadClass, LDivHeadingName[i]);
-        LListElement.appendChild(LDivHeadCell);
-    }
+    LDivULElement.appendChild(GListHeadElement);
 
     let LDataObject = GDataObj;
-
     let LTraverse = pvtGetAllUserDataInTable(LDataObject, 'div');
-    for (let key of LTraverse) {
-        LDivULElement.appendChild(key);
+
+    for (const key of LTraverse) {
+        LDivULElement.appendChild(key)
     }
 
-    let LArea = document.getElementById('data-display-area');
-    LArea.innerHTML = '';
-    LArea.appendChild(LListElement);
-    LArea.appendChild(LDivULElement);
-
+    // Displays the Div Content to the Display Area
+    pvtAppendDataToArea(LDivULElement);
 }
 
-function pvtPromptData() {
-    let child = event.target.parentElement;
-    let parent = child.parentNode;
-    let LIndex = pvtGetIndexOfSelectedItem(parent, child);
-    alert(`Full Name : ${GDataObj.UserData[LIndex].data[0]}  ${GDataObj.UserData[LIndex].data[1]}`);
+// checks and generates the Table Header Element
+function pvtCreateTableHeaderIfNeeded() {
+    if (!GDataHeadElement) {
+        let LTableHeadClass = "text-sm font-bold border-solid border-2 border-black text-center bg-[#9DF1DF]  px-6 py-4";
+        let LTableHeadScope = 'col';
+        let LTableHeadingName = ['#', 'First Name', 'Last Name', 'Delete'];
+
+        GDataHeadElement = pvtCreateTableHeadElement('bg-white border-b');
+
+        let LTableHeadRow = pvtCreateTableRowElement(null);
+
+        LTableHeadingName.forEach(heading => {
+            let LTableHeadCell = pvtCreateTableHeadCell(LTableHeadClass, LTableHeadScope, heading);
+            LTableHeadRow.appendChild(LTableHeadCell);
+        });
+
+        GDataHeadElement.appendChild(LTableHeadRow);
+    }
 }
 
-function pvtGetIndexOfSelectedItem(p_varParent, p_varChild) {
-    return Array.prototype.indexOf.call(p_varParent.children, p_varChild);
+// checks and generates the Div Content Header Element
+function pvtCreateDivHeaderIfNeeded() {
+    if (!GListHeadElement) {
+        let LDivHeadClass = "text-sm text-center table-cell bg-[#9DF1DF]  max-width-xs font-bold text-gray-900 px-6 py-4";
+        let LDivHeadingName = ['#', 'First Name', 'Last Name', 'Delete'];
+
+        GListHeadElement = pvtCreateDivElement("bg-white table-row border-b flex justify-around", null, null);
+
+        // Attach the Data to the Div
+        LDivHeadingName.forEach(heading => {
+            let LDivHeadCell = pvtCreateDivElement(LDivHeadClass, null, heading);
+            GListHeadElement.appendChild(LDivHeadCell);
+        });
+    }
 }
 
+
+/**
+ * 
+ * @param {Object} p_objData - GDataObj 
+ * @param {String} p_strDisplayType - Type of Table to be generated [Table, Div]
+ * @returns {Array} LTableBodyElementArr - Array containing all the Data elements
+ * This function creates an array containg nodes for both type of tables
+ */
 function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
-    console.log('Get all user data')
+    // bool toggles the coloring CSS
     let bool = true;
+    let LObjectLength = p_objData.UserData.length;
+    // Array to store the Elements
     let LTableBodyElementArr = [];
-    for (let i = 0; i < p_objData.UserData.length; i++) {
+    // traversing through Array
+    for (let LObjIndex = 0; LObjIndex < LObjectLength; LObjIndex++) {
         let LTableRowElement;
-
-        if (p_strDisplayType == 'table') {
+        // Creating Row according to the input
+        if (p_strDisplayType === 'table') {
             LTableRowElement = pvtCreateTableRowElement(pvtPromptData);
         }
-        else if (p_strDisplayType == 'div') {
-            LTableRowElement = pvtCreateListElement('flex justify-around', pvtPromptData);
+        else if (p_strDisplayType === 'div') {
+            LTableRowElement = pvtCreateListElement('table-row', pvtPromptData);
         }
 
+        // Toggling the bg color
         if (bool) {
             LTableRowElement.className += ' bg-[#E3F6FF] border-b';
             bool = false;
@@ -250,77 +329,197 @@ function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
             bool = true;
         }
 
-        let LDataArr = p_objData.UserData[i].data;
+        let LDataArr = p_objData.UserData[LObjIndex].data;
         let LTraverse = p_objData[p_strDisplayType];
+        // Adding Number
+        let LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, String(LObjIndex + 1));
+        LTableRowElement.appendChild(LTableData)
 
-        for (let index = 0; index < LDataArr.length; index++) {
-            let LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, LDataArr[index]);
-            LTableRowElement.appendChild(LTableData);
+        // Traversing the array Object
+        for (let LDataIndex = 0; LDataIndex < GINPUT_DATA_ROW; LDataIndex++) {
+            // checking for proper data From the JSON 
+            if (pvtValidateInputString(LDataArr[LDataIndex].trim()) && pvtCheckForJsonError(LDataArr)) {
+                LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, LDataArr[LDataIndex]);
+                LTableRowElement.appendChild(LTableData);
+            } else {
+                return Error();
+            }
         }
-
-        let LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, p_objData.anchor);
+        // Attaching Anchor Tag
+        LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, p_objData.anchor);
         LTableRowElement.appendChild(LTableData);
-
+        // Adding Final Row to the Array
         LTableBodyElementArr.push(LTableRowElement);
     }
-
     return LTableBodyElementArr;
 }
 
+
+/**
+ * @returns {void} - generates and applies the JSON
+ */
 function pvtGenerateJSON() {
     let LDataObject = GDataObj;
-    console.log('generating json')
     let LJsonString = JSON.stringify(LDataObject, null, 2);
-    // let LJsonArea = document.getElementById('data-display-area');
     let LJsonArea = document.getElementById('json-text-display');
-    let LUpdateDataBtn = document.getElementById('json-data-add');
-    LUpdateDataBtn.style.display = 'block';
 
-    LJsonArea.style.display = 'block';
     LJsonArea.value = "";
-    LJsonArea.value = (LJsonString);
+    LJsonArea.value = LJsonString;
 }
 
+// Eventer handler for Update JSON button 
+// Confirms and Updates the JSON and call function to update Tables in Dispaly Area
 function pvtUpdataObjectData() {
-    try {
+    let LConfirm = confirm('Are you sure you want to Update? The saved data may be lost.')
+    if (LConfirm) {
+        // making copy of object for Error handling
         let LDataObject = GDataObj;
-        console.log('Update object data');
-        let LJsonArea = document.getElementById('json-text-display').value;
-        let LUpdatedObj = JSON.parse(LJsonArea);
-
-        GDataObj = LUpdatedObj;
-        pvtDisplayDataInDiv()
-
-    } catch (e) {
-        alert("Please Enter Proper Json String");
+        try {
+            let LJsonArea = document.getElementById('json-text-display').value;
+            if (pvtIsJSONString(LJsonArea)) {
+                let LUpdatedObj = JSON.parse(LJsonArea);
+                GDataObj = LUpdatedObj;
+                // updating display table
+                pvtDisplayDataInDiv();
+            } else {
+                alert("An error occurred while processing the JSON data.");
+            }
+        } catch (e) {
+            GDataObj = LDataObject;
+            pvtDisplayDataInDiv();
+            alert("Invalid JSON format. Please enter a valid JSON string. ");
+        }
+    } else {
+        return
     }
 
 }
 
-let GDataObj = {
-    UserData: [
-        // {
-        //     data: ['Dipesh', 'Marathe'],
-        // }
-        // , {
-        //     data: ['Mayur', 'Kumavat' ],
-        // }
-    ],
-    anchor: '<a class="cursor-pointer font-bold  hover:text-red-500" onclick="pvtDeleteElement(event)" title="delete">&#x2715;</a>',
-    table: {
-        tagName: 'td',
-        className: 'text-sm border-solid border-2 text-center text-gray-900 font-light px-6 py-4 whitespace-nowrap',
-    },
-    div: {
-        tagName: 'span',
-        className: 'md:text-sm text-[5px]  text-center flex-1 max-width-xs text-gray-900 font-light md:px-6 md:py-4 px-3 py-2 whitespace-wrap',
-    },
+
+/**
+ * 
+ * @param {String} p_varTagName 
+ * @param {String} p_strClassName 
+ * @param {String} p_varInnerHTML 
+ * @returns {LElement} 
+ * This function is called generating the Element for the cells 
+ */
+function pvtCreateTableDataElement(p_varTagName, p_strClassName, p_varInnerHTML) {
+    if (p_varTagName && p_varInnerHTML && p_strClassName) {
+
+        let LElement = document.createElement(p_varTagName);
+        LElement.className = p_strClassName;
+
+        if (p_varInnerHTML.includes('delete')) {
+            LElement.classList.add('delete-button');
+        }
+
+        LElement.innerHTML = p_varInnerHTML;
+        return LElement;
+    } else return Error('Improper Data Inputted');
 }
 
+/** **********************    Validators ************************/
 
+/**
+ * @returns {boolean} - checks if atleast one of the radio button is selected or not
+ */
+function pvtCheckSelection() {
+    const LDivRadioBtn = document.getElementById('div-radio');
+    const LTableRadioBtn = document.getElementById('table-radio');
+    if (LDivRadioBtn.checked || LTableRadioBtn.checked)
+        return true
+    else
+        return false;
+}
+
+/**
+ * 
+ * @param {String} - Checks if the inputted String is valid for the Data or not 
+ */
+function pvtValidateInputString(p_strInputName) {
+    // REGEX that accepts only String that may start with lowercase or uppercase letter
+    // and after that only lowercase letters of length between 1 to 15 [exluding both] 
+    const regex = /^[A-Za-z][a-z]{1,14}$/;
+
+    if (regex.test(p_strInputName)) {
+        return true;
+    } else
+        return false;
+}
+
+// checks the validity of the JSON String
+function pvtIsJSONString(p_StrJson) {
+    try {
+        JSON.parse(p_StrJson);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+// checks if the User has added extra inputs to Data Array
+let pvtCheckForJsonError = (p_arrDataArr) => {
+    if (p_arrDataArr.length > 0) {
+        return p_arrDataArr.length == GINPUT_DATA_ROW;
+    }
+}
+
+/**
+ * 
+ * @param {Node} p_varHeading - The Element that is to be attached to the Display Area
+ */
+function pvtAppendDataToArea(p_varHeading) {
+    let LArea = document.getElementById('data-display-area');
+    LArea.innerHTML = '';
+    LArea.appendChild(p_varHeading);
+}
+
+// Function to prompt the data 
+// It is handler event function for that rows
+function pvtPromptData() {
+    event.preventDefault();
+    let LTarget = event.target;
+    if (!LTarget.classList.contains('delete')) {
+        let child = LTarget.parentElement;
+        let parent = child.parentNode;
+        let LIndex = pvtGetIndexOfSelectedItem(parent, child);
+        // Alert The String Template
+        alert(`Full Name : ${GDataObj.UserData[LIndex].data[0]}  ${GDataObj.UserData[LIndex].data[1]}`);
+    } else {
+        console.error('error prompting the Full Name');
+    }
+}
+
+/*********************** Helper */
+/**
+ * 
+ * @param {Node} p_varParent - Parent Element
+ * @param {Node} p_varChild - Child Element
+ * @returns {Integer} - Index of the selected item
+ */
+function pvtGetIndexOfSelectedItem(p_varParent, p_varChild) {
+    /**
+     * {Array.prototype.indexOf.call} methods finds the index of the selected item
+     * from the all the items that are inside the parent element
+     */
+    let LIndex = Array.prototype.indexOf.call(p_varParent.children, p_varChild);
+    // Because the Div Type Table contains one extra row (Headers) That is why reducing the index by 1 before returning 
+    if (p_varParent.classList.contains('div')) {
+        LIndex -= 1;
+    }
+    return LIndex;
+}
 
 // Helper Functions to create Elements of the HTML page
 
+/**
+ * 
+ * @param {String} p_strClassName - Class Name of the element
+ * @param {String} p_strId - Id of the element
+ * @param {String} p_strTextContent - Text content inside the element
+ * @returns 
+ */
 function pvtCreateDivElement(p_strClassName, p_strId = null, p_strTextContent) {
     let div = document.createElement('div');
     div.className = p_strClassName;
@@ -328,84 +527,124 @@ function pvtCreateDivElement(p_strClassName, p_strId = null, p_strTextContent) {
     if (p_strId) div.id = p_strId;
     return div;
 }
-function pvtCreateSpanElement(p_strClassName, p_strTextContent) {
-    let span = document.createElement('span');
-    span.className = p_strClassName;
-    span.textContent = p_strTextContent;
-    return span;
-}
-function pvtCreateULElement(p_strClassName) {
-    let LUnorderListElement = document.createElement('ul');
-    LUnorderListElement.className = p_strClassName;
-    return LUnorderListElement;
-}
+
+/**
+ * 
+ * @param {String} p_strClassName - Class Name of the element
+ * @param {Function} p_handleEvent - called when event occurs
+ * @returns 
+ */
 function pvtCreateListElement(p_strClassName, p_handleEvent) {
     let li = document.createElement('li');
     li.addEventListener('click', p_handleEvent);
     li.className = p_strClassName;
     return li;
 }
-
+/**
+ * 
+ * @returns {Node} Element consisting of the Text Area
+ */
 function pvtCreateTextBoxElement() {
-    let className = "block p-2.5 w-full text-xs overflow-auto hidden text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    let className = "block p-2.5 m-2 md:w-[45vw] w-[95vw] h-60   text-xs overflow-auto text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
     let LTextAreaElement = document.createElement('textarea');
     LTextAreaElement.className = className;
     LTextAreaElement.rows = 10;
     LTextAreaElement.id = 'json-text-display';
-    LTextAreaElement.hidden = true;
     return LTextAreaElement;
 }
 
-function pvtCreateButton(p_strClassName, id, textContent, p_fnGenerateJson, p_StrTitle) {
-    let button = document.createElement('button');
-    button.className = p_strClassName;
-    button.id = id;
-    button.title = p_StrTitle;
-    button.addEventListener('click', p_fnGenerateJson);
-    button.textContent = textContent;
-    return button;
+/**
+ * 
+ * @param {String} p_strClassName - class name of the Button 
+ * @param {String} p_strId - Id of the button
+ * @param {String} p_StrTextContent - Text content 
+ * @param {Function} p_evtHandlerFunction - Function called when eventt occurs
+ * @param {String} p_StrTitle - Title of the button
+ * @returns {LButtonEl} Button Element
+ */
+function pvtCreateButton(p_strClassName, p_strId, p_StrTextContent, p_evtHandlerFunction, p_StrTitle) {
+    let LButtonEl = document.createElement('button');
+    LButtonEl.className = p_strClassName;
+    LButtonEl.id = p_strId;
+    LButtonEl.title = p_StrTitle;
+    LButtonEl.addEventListener('click', p_evtHandlerFunction);
+    LButtonEl.textContent = p_StrTextContent;
+    return LButtonEl;
 }
 
-function pvtCreateRadioLabel(textContent, eventType, name, eventHandler, id) {
-    let label = document.createElement('label');
-    label.className = 'cursor-pointer font-bold p-2'
-    let input = pvtCreateInputElement('radio', null, id, true);
-    input.addEventListener(eventType, eventHandler);
-    label.title = textContent;
-    input.name = name;
-    input.className = 'm-2 p-2 cursor-pointer'
-    label.appendChild(input);
-    label.appendChild(document.createTextNode(textContent));
-    return label;
+/**
+ * 
+ * @param {String} p_StrTextContent  
+ * @param {String} p_strEventType 
+ * @param {String} p_strName 
+ * @param {Function} p_evtHandlerFunction 
+ * @param {String} p_strId 
+ * @returns {LLabelEl}
+ */
+function pvtCreateRadioLabel(p_StrTextContent, p_strEventType, p_strName, p_evtHandlerFunction, p_strId) {
+    let LLabelEl = document.createElement('label');
+    LLabelEl.className = 'cursor-pointer font-bold p-2'
+    let LInputEl = pvtCreateInputElement('radio', null, p_strId, true);
+    LInputEl.addEventListener(p_strEventType, p_evtHandlerFunction);
+    LLabelEl.title = p_StrTextContent;
+    LInputEl.name = p_strName;
+    LInputEl.className = 'm-2 p-2 cursor-pointer'
+    LLabelEl.appendChild(LInputEl);
+    LLabelEl.appendChild(document.createTextNode(p_StrTextContent));
+    return LLabelEl;
 }
 
-function pvtCreateFormElement(eventType, eventHandler) {
+/**
+ * 
+ * @param {String} p_strEventType 
+ * @param {Function} p_evtHandlerFunction 
+ * @returns 
+ */
+function pvtCreateFormElement(p_strEventType, p_evtHandlerFunction) {
     let form = document.createElement('form');
     form.className = 'flex-col align-middle md:flex flex-1 md:flex-row justify-center w-auto  '
-    form.addEventListener(eventType, eventHandler);
+    form.addEventListener(p_strEventType, p_evtHandlerFunction);
     return form;
 }
 
-function pvtCreateInputElement(p_strType, p_StrPlaceholder, id, required, p_strClassName) {
+/**
+ * 
+ * @param {String} p_strType 
+ * @param {String} p_StrPlaceholder 
+ * @param {String} p_strId 
+ * @param {Boolean} p_boolIsRequired 
+ * @param {String} p_strClassName 
+ * @returns 
+ */
+function pvtCreateInputElement(p_strType, p_StrPlaceholder, p_strId, p_boolIsRequired, p_strClassName) {
     let input = document.createElement('input');
     input.type = p_strType;
     input.className = p_strClassName;
     if (p_StrPlaceholder) input.placeholder = p_StrPlaceholder;
-    if (id) input.id = id;
-    if (required) input.required = required;
+    if (p_strId) input.id = p_strId;
+    if (p_boolIsRequired) input.required = p_boolIsRequired;
     return input;
 }
 
+/**
+ * 
+ * @param {String} p_strClassName 
+ * @returns {LTableEl}
+ */
 function pvtCreateTableElement(p_strClassName) {
-    let table = document.createElement('table');
-    table.className = p_strClassName;
-    return table;
+    let LTableEl = document.createElement('table');
+    LTableEl.className = p_strClassName;
+    return LTableEl;
 }
 
+/**
+ * 
+ * @param {String} p_strClassName  
+ */
 function pvtCreateTableHeadElement(p_strClassName) {
-    let thead = document.createElement('thead');
-    thead.className = p_strClassName;
-    return thead;
+    let LTHeadEl = document.createElement('thead');
+    LTHeadEl.className = p_strClassName;
+    return LTHeadEl;
 }
 
 function pvtCreateTableRowElement(p_handleEvent) {
@@ -415,18 +654,9 @@ function pvtCreateTableRowElement(p_handleEvent) {
 }
 
 function pvtCreateTableHeadCell(p_strClassName, p_strScope, p_strTextContent) {
-    let th = document.createElement('th');
-    th.className = p_strClassName;
-    th.scope = p_strScope;
-    th.textContent = p_strTextContent;
-    return th;
+    let LThEl = document.createElement('th');
+    LThEl.className = p_strClassName;
+    LThEl.scope = p_strScope;
+    LThEl.textContent = p_strTextContent;
+    return LThEl;
 }
-
-function pvtCreateTableDataElement(p_varTagName, p_strClassName, p_varInnerHTML) {
-    console.log('delete created')
-    let td = document.createElement(p_varTagName);
-    td.className = p_strClassName;
-    td.innerHTML = p_varInnerHTML;
-    return td;
-}
-
