@@ -20,93 +20,24 @@
             width: 100%;
             top: 0;
             bottom: 0;
-            overflow-x: scroll;
+            overflow: auto;
         }
 
         button:hover {
             cursor: pointer;
         }
 
-        form {
+        form{
             display: grid;
             width: fit-content;
         }
     </style>
 </head>
-<!-- Chance the delete in div -->
-<!-- apply onclick functionality on rows -->
-
 <body class="min-h-screen item-center min-w-screen 	">
 
-    <!-- <div class="start-app-div w-[95vw] bg-green-300" id="start_application_div">
-        <button type="button" class="btn bg-blue-300 rounded-sm p-1 m-6" id="start-app-btn">Start
-            Application</button>
-    </div>
-    <div class="container flex  flex-col flex-wrap width-screen ">
-        <div class="form flex flex-1 flex-col w-[90vw] p-2 self-center bg-blue-100 ">
+     
 
-            <div class="selectors flex-row flex md:w-[50%] self-center bg-blue-300 justify-around py-3 my-8">
-                <div class="div p-1">
-                    <label>
-                        <input type="radio" name="option" id="selected-div" onchange="checking()">
-                        Using DIV
-                    </label>
-                </div>
-                <div class="div p-1">
-                    <label>
-                        <input type="radio" name="option" id="'selected-table">
-                        Using Table
-                    </label>
-                </div>
-            </div>
-
-            <div class="input-section bg-green-300 self-center p-5 md:w-[50%]">
-                <form action="#">
-                    <input type="text" class="first-name m-5" id="f-name" placeholder="First Name" required>
-                    <input type="text" class="last-name m-5" id="l-name" placeholder="Last Name" required>
-                    <button type="submit" class="btn bg-gray-300 m-5" id="add-user-btn">Add User</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="table-section w-[95vw] flex flex-1 flex-col   bg-green-300">
-            <div class="p-1 m-2 font-bold bg-gray-500">
-                <span>User List</span>
-            </div>
-            <div class="data-display  bg-gray-300 h-60 overflow-auto m-2" id="data-display-area">
-                <ul class="min-w-full"> 
-                    <li class="bg-white border-b flex justify-around">
-                        <span class="text-sm font-bold text-gray-900 px-6 py-4 text-left">First Name</span>
-                        <span class="text-sm font-bold text-gray-900 px-6 py-4 text-left">Last Name</span>
-                        <span class="text-sm font-bold text-gray-900 px-6 py-4 text-left">Delete</span>
-                    </li>
-                    <li class="bg-gray-100  border-b flex justify-around">
-                        <span class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">Diepsh</span>
-                        <span class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">Marathe</span>
-                        <span class="text-sm font-light px-6 py-4 text-blue-900"><a
-                                class=" cursor-pointer underline hover:text-blue-100 ">Delete</a></span>
-                    </li>
-                    <li class="bg-yellow-100 border-b flex justify-around">
-                        <span class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">Mayur</span>
-                        <span class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">Dongre</span>
-                        <span class="text-sm font-light px-6 py-4 text-blue-900"> <a
-                                class=" cursor-pointer underline hover:text-blue-100 ">Delete</a></span>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-        <div class="generate-json self-end m-4 p-2 ">
-            <button type="button" id="generate-json-btn" class="bg-gray-300">Generate JSON</button>
-        </div>
-    </div>   -->
-
-    <!-- <script>
-        let test = document.getElementById("test");
-        test.innerHTML = '<a class=" cursor-pointer underline hover:text-blue-100 ">Delete</a>'
-    </script> -->
-
-    <script src="./app.js"></script>
+    <script src="./DOM_Script.js"></script>
 </body>
 
 </html>
