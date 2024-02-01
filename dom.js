@@ -1,9 +1,11 @@
 let GDataHeadElement, GListHeadElement;
+// total number of input data [Fname , LName]
 const GINPUT_DATA_ROW = 2;
 
 /**
  * @property {UserData} - This is an Array of an objects Which consist of Array of with property as 'data'
  * @property {anchor} - This is the HTML text for the delete button
+ * @property {heading} - This is Heading components required 
  * @property {table} - This is an Object having 2 properties i.e. @property {tagName} and @property {className}
  * @property {div}- This is an Object having 2 properties i.e. @property {tagName} and @property {className} 
  * 
@@ -12,11 +14,17 @@ let GDataObj = {
     UserData: [
     ],
     anchor: '<a class="delete cursor-pointer font-bold  hover:text-red-500" onclick="pvtRemoveRow()" title="delete">&#x2715;</a>',
+    heading: {
+        headingClass: 'text-sm text-center table-cell bg-[#9DF1DF]  max-width-xs font-bold text-gray-900 px-6 py-4',
+        headingContent: ['#', 'First Name', 'Last Name', 'Delete']
+    },
     table: {
+        headerClass: 'min-w-full border-collapse',
         tagName: 'td',
         className: 'text-sm border-solid border-2 border-black text-center text-gray-900 font-light px-6 py-4 whitespace-nowrap',
     },
     div: {
+        headerClass: 'div min-w-full table',
         tagName: 'div',
         className: 'div text-sm table-cell  text-center flex-1 max-width-xs text-gray-900 font-light md:px-3 md:py-4 px-3 py-2 whitespace-wrap',
     },
@@ -25,8 +33,8 @@ let GDataObj = {
 // This Function loads when HTML page is loaded
 window.onload = function () {
     let isClicked = false;
-
-    let LStartAppDiv = pvtCreateDivElement('start-app-div w-[95vw] h-[15%]', 'start_application_div');
+ 
+    let LStartAppDiv = pvtCreateCustomTagElement('div', 'start-app-div w-[95vw] h-[15%]', null, 'start_application_div');
     let LStartAppBtn = pvtCreateButton('btn font-bold bg-blue-300 rounded-sm p-2 m-6', 'start-app-btn', 'Start Application', null, "Click to Start Application");
 
     // Event handlers for Checking that the application is started only once
@@ -53,28 +61,28 @@ window.onload = function () {
 function pvtStartApplication() {
     // External Container containing 3 divs i.e. 
     //  Form , Display and JSon Handlers
-    let LExternalContainer = pvtCreateDivElement('flex flex-col flex-wrap  min-h-screen   relative');
+    let LExternalContainer = pvtCreateCustomTagElement('div', 'flex flex-col flex-wrap min-h-screen relative');
 
     // Formation of Form container with it's inner Elements
-    let LFormContainer = pvtCreateDivElement('form relative flex flex-1 flex-col w-[90vw]  h-[25%] p-2 self-center justify-center bg-blue-100');
+    let LFormContainer = pvtCreateCustomTagElement('div', 'form relative flex flex-1 flex-col w-[90vw]  h-[25%] p-2 self-center justify-center bg-blue-100');
     // Label 1 container
-    let LOptionContainer = pvtCreateDivElement('selectors md:flex-row flex-col flex md:w-[50%] self-center bg-[#8DCBE6] border-b justify-around py-3 my-8');
-    let LRadio1Container = pvtCreateDivElement('p-1 m-1');
-    let LRadio1OptionLbl = pvtCreateRadioLabel('Using DIV', 'change', 'option', pvtGenerateDivContent, 'div-radio');
+    let LOptionContainer = pvtCreateCustomTagElement('div', 'selectors md:flex-row flex-col flex md:w-[50%] self-center bg-[#8DCBE6] border-b justify-around py-3 my-8');
+    let LRadio1Container = pvtCreateCustomTagElement('div', 'p-1 m-1');
+    let LRadio1OptionLbl = pvtCreateRadioLabel('Using DIV', 'change', 'option', () => { return pvtGenerateTablesOfType('div'); }, 'div-radio');
 
     LRadio1Container.appendChild(LRadio1OptionLbl);
 
     // label 2 container
-    let LRadio2Container = pvtCreateDivElement('p-1 m-1');
-    let LRadio2OptionLbl = pvtCreateRadioLabel('Using Table', 'change', 'option', pvtGenerateTable, 'table-radio');
+    let LRadio2Container = pvtCreateCustomTagElement('div', 'p-1 m-1');
+    let LRadio2OptionLbl = pvtCreateRadioLabel('Using Table', 'change', 'option', () => { return pvtGenerateTablesOfType('table'); }, 'table-radio');
     LRadio2Container.appendChild(LRadio2OptionLbl);
 
     LOptionContainer.appendChild(LRadio1Container);
     LOptionContainer.appendChild(LRadio2Container);
 
     // Input form Container
-    let LInputContainer = pvtCreateDivElement('input-section self-center p-5 md:w-[50%]');
-    let LFormElement = pvtCreateFormElement('submit', pvtAddUser);
+    let LInputContainer = pvtCreateCustomTagElement('div', 'input-section self-center p-5 md:w-[50%]');
+    let LFormElement = pvtCreateCustomTagElement('form', 'flex-col align-middle md:flex flex-1 md:flex-row justify-center w-auto', null, null, 'submit', pvtAddUser);
     // Input form 
     let LFirstNameInput = pvtCreateInputElement('text', 'First Name', 'first_name', true, "m-1");
     let LLastNameInput = pvtCreateInputElement('text', 'Last Name', 'last_name', true, 'm-1');
@@ -91,28 +99,28 @@ function pvtStartApplication() {
 
 
     // Display Area Container
-    LShowDiv = pvtCreateDivElement("flex relative flex-1 md:flex-row flex-col md:w-[95vw] h-[35vh] ", 'displayer')
+    LShowDiv = pvtCreateCustomTagElement('div', "flex relative flex-1 md:flex-row flex-col md:w-[95vw] h-[35vh] ", null, 'displayer')
 
     // Table Display Area Container
-    let LTableContainer = pvtCreateDivElement('table-section justify-center md:w-[45vw] w-[95vw]  h-[100%] flex flex-1 flex-col');
+    let LTableContainer = pvtCreateCustomTagElement('div', 'table-section justify-center md:w-[45vw] w-[95vw]  h-[100%] flex flex-1 flex-col');
 
-    let LTitle = pvtCreateDivElement('p-1 m-2 font-bold bg-[#8DCBE6] ', null, 'User List');
-    let LDisplayArea = pvtCreateDivElement('data-display bg-gray-300 h-60 overflow-auto m-2', 'data-display-area');
+    let LTitle = pvtCreateCustomTagElement('div', 'p-1 m-2 font-bold bg-[#8DCBE6]', 'User List');
+    let LDisplayArea = pvtCreateCustomTagElement('div', 'data-display bg-gray-300 h-60 overflow-auto m-2', null, 'data-display-area');
 
     LTableContainer.appendChild(LTitle);
     LTableContainer.appendChild(LDisplayArea);
     LShowDiv.appendChild(LTableContainer);
 
     // Json Display Area Container
-    LTableContainer = pvtCreateDivElement('table-section justify-center md:w-[45vw] w-[95vw]  h-[80%] flex flex-1 flex-col');
-    LTitle = pvtCreateDivElement('p-1 m-2 font-bold bg-[#8DCBE6] ', null, 'JSON');
+    LTableContainer = pvtCreateCustomTagElement('div', 'table-section justify-center md:w-[45vw] w-[95vw]  h-[80%] flex flex-1 flex-col');
+    LTitle = pvtCreateCustomTagElement('div', 'p-1 m-2 font-bold bg-[#8DCBE6] ', 'JSON');
     let LJsonTextArea = pvtCreateTextBoxElement();
     LTableContainer.appendChild(LTitle);
     LTableContainer.appendChild(LJsonTextArea);
     LShowDiv.appendChild(LTableContainer);
 
     // JSON Handler  Container
-    let LGenerateJsonDiv = pvtCreateDivElement('flex relative justify-center item-center flex-1 md:h-[10%] bg-grey-100  lg:h-[25%] md:flex-row flex-col generate-json items-center  rounded-sm p-1 m-6');
+    let LGenerateJsonDiv = pvtCreateCustomTagElement('div', 'flex relative justify-center item-center flex-1 md:h-[10%] bg-grey-100  lg:h-[25%] md:flex-row flex-col generate-json items-center  rounded-sm p-1 m-6');
 
     let LGenerateJSONBtn = pvtCreateButton('generate-json h-min btn bg-blue-300 font-bold rounded-sm p-2 m-6 text-nowrap', 'generate-json-btn', 'Generate JSON', pvtGenerateJSON, "Generate JSON");
     let LAddNewJsonDataBtn = pvtCreateButton('generate-json h-min w-max btn bg-blue-300 font-bold rounded-sm p-2 m-6 text-nowrap', 'json-data-add', 'Updata Data', pvtUpdataObjectData, "Update Object");
@@ -147,7 +155,6 @@ function pvtAddUser(event) {
 
         // Array to give as input to the object
         // It is ensured that data is in proper format
-
         let LDataArr = [];
         LDataArr.push(LFirstNameInput.value.trim());
         LDataArr.push(LLastNameInput.value.trim());
@@ -204,97 +211,92 @@ function pvtDisplayDataInDiv() {
     const LTableRadioBtn = document.getElementById('table-radio');
 
     if (LDivRadioBtn.checked) {
-        pvtGenerateDivContent();
+        pvtGenerateTablesOfType('div');
     } else if (LTableRadioBtn.checked) {
-        pvtGenerateTable();
+        pvtGenerateTablesOfType('table');
     }
 }
 
-/**  Generators */
-
-
+/*****************************************  Generators */
 
 /**
- * @returns {void} - It generates the basic structure of the Table 
+ * 
+ * @param {String} p_strType - Type of Table to generate 
+ * Displays the Tables in the Display Area
  */
-function pvtGenerateTable() {
-    const LTableElement = pvtCreateTableElement("min-w-full border-collapse");
-    // Checks if Table Header is already generated or not
-    pvtCreateTableHeaderIfNeeded();
+function pvtGenerateTablesOfType(p_strType) {
+    // Creates Custom Tags for the Different Types of Tables
+    let LDataHeadElement = pvtCreateCustomTagElement(p_strType, GDataObj[p_strType].headerClass);
+    // Child Container
+    let LTableChildContainer;
 
-    LTableElement.appendChild(GDataHeadElement);
+    // This parts calls function to create the header for Div Tables and also assign the complete table to it as We dont have 
+    // to create any inner elements for the div tables
+    if (p_strType === 'div') {
+        let LGeneratedHeadRow = pvtCreateHeadCellIfNeeded('div', 'bg-white table-row border-b flex justify-around', 'div')
+        LDataHeadElement.appendChild(LGeneratedHeadRow);
+        LTableChildContainer = LDataHeadElement;
+    }
+    // As we need TBody extra element for the table we assign it to LTableChildContainer
+    else {
+        let LGeneratedHeadRow = pvtCreateHeadCellIfNeeded('thead', 'bg-white border-b', 'th');
+        LDataHeadElement.appendChild(LGeneratedHeadRow);
+        LTableChildContainer = document.createElement('tbody');
+    }
 
     let LDataObject = GDataObj;
-    let LTableBodyElement = document.createElement('tbody');
-    let LDataArr = pvtGetAllUserDataInTable(LDataObject, 'table');
-
+    // Gets the Row data
+    let LDataArr = pvtGetAllUserDataInTable(LDataObject, p_strType);
+    // Appends the Rows to the tables
     LDataArr.forEach(key => {
-        LTableBodyElement.appendChild(key);
+        LTableChildContainer.appendChild(key);
     });
-    // appends table body
-    LTableElement.appendChild(LTableBodyElement);
+
+    // If its table TBody has to be appended after THead 
+    if (p_strType === 'table') {
+        LDataHeadElement.appendChild(LTableChildContainer);
+    }
+    // As such nothing has to be donee with Div's We directly assign the variable again
+    else {
+        LDataHeadElement = LTableChildContainer;
+    }
 
     // Displays the Table to the Display Area
-    pvtAppendDataToArea(LTableElement);
+    pvtAppendDataToArea(LDataHeadElement);
 }
 
-/**
- * @returns {void} - It generates the basic structure of the Div Data
- */
-function pvtGenerateDivContent() {
-    const LDivULElement = pvtCreateDivElement('div min-w-full table', null, null);
-    // Checks if Div Header is already generated or not
-    pvtCreateDivHeaderIfNeeded();
+function pvtCreateHeadCellIfNeeded(p_strType, p_strClassName, p_strCellType) {
+    let LDataHeadElement;
+    // Gettingheading data from object
+    let LHeadCellClass = GDataObj.heading.headingClass;
+    let LHeadingCellNameArr = GDataObj.heading.headingContent;
+    LDataHeadElement = pvtCreateCustomTagElement(p_strType, p_strClassName);
 
-    LDivULElement.appendChild(GListHeadElement);
-
-    let LDataObject = GDataObj;
-    let LTraverse = pvtGetAllUserDataInTable(LDataObject, 'div');
-
-    for (const key of LTraverse) {
-        LDivULElement.appendChild(key)
+    let LTableHeadChildContainer;
+    if (p_strType === 'div') {
+        LTableHeadChildContainer = LDataHeadElement;
+    }
+    // As we need TBody extra element for the table we assign it to LTableChildContainer
+    else {
+        LHeadCellClass += ' border-solid border-2 border-black';
+        LTableHeadChildContainer = pvtCreateCustomTagElement('tr');
     }
 
-    // Displays the Div Content to the Display Area
-    pvtAppendDataToArea(LDivULElement);
-}
+    LHeadingCellNameArr.forEach(heading => {
+        let LTableHeadCell = pvtCreateCustomTagElement(p_strCellType, LHeadCellClass, heading);
+        LTableHeadChildContainer.appendChild(LTableHeadCell);
+    });
 
-// checks and generates the Table Header Element
-function pvtCreateTableHeaderIfNeeded() {
-    if (!GDataHeadElement) {
-        let LTableHeadClass = "text-sm font-bold border-solid border-2 border-black text-center bg-[#9DF1DF]  px-6 py-4";
-        let LTableHeadScope = 'col';
-        let LTableHeadingName = ['#', 'First Name', 'Last Name', 'Delete'];
-
-        GDataHeadElement = pvtCreateTableHeadElement('bg-white border-b');
-
-        let LTableHeadRow = pvtCreateTableRowElement(null);
-
-        LTableHeadingName.forEach(heading => {
-            let LTableHeadCell = pvtCreateTableHeadCell(LTableHeadClass, LTableHeadScope, heading);
-            LTableHeadRow.appendChild(LTableHeadCell);
-        });
-
-        GDataHeadElement.appendChild(LTableHeadRow);
+    if (p_strType === 'table') {
+        LDataHeadElement.appendChild(LTableHeadChildContainer);
+    } else {
+        LDataHeadElement = LTableHeadChildContainer;
     }
+
+    // GDataHeadElement.appendChild(LTableHeadRow);
+    return LDataHeadElement;
+
 }
-
-// checks and generates the Div Content Header Element
-function pvtCreateDivHeaderIfNeeded() {
-    if (!GListHeadElement) {
-        let LDivHeadClass = "text-sm text-center table-cell bg-[#9DF1DF]  max-width-xs font-bold text-gray-900 px-6 py-4";
-        let LDivHeadingName = ['#', 'First Name', 'Last Name', 'Delete'];
-
-        GListHeadElement = pvtCreateDivElement("bg-white table-row border-b flex justify-around", null, null);
-
-        // Attach the Data to the Div
-        LDivHeadingName.forEach(heading => {
-            let LDivHeadCell = pvtCreateDivElement(LDivHeadClass, null, heading);
-            GListHeadElement.appendChild(LDivHeadCell);
-        });
-    }
-}
-
 
 /**
  * 
@@ -314,10 +316,10 @@ function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
         let LTableRowElement;
         // Creating Row according to the input
         if (p_strDisplayType === 'table') {
-            LTableRowElement = pvtCreateTableRowElement(pvtPromptData);
+            LTableRowElement = pvtCreateCustomTagElement('tr', null, null, null, 'click', pvtPromptData);
         }
         else if (p_strDisplayType === 'div') {
-            LTableRowElement = pvtCreateListElement('table-row', pvtPromptData);
+            LTableRowElement = pvtCreateCustomTagElement('div', 'table-row', null, null, 'click', pvtPromptData);
         }
 
         // Toggling the bg color
@@ -332,21 +334,22 @@ function pvtGetAllUserDataInTable(p_objData, p_strDisplayType) {
         let LDataArr = p_objData.UserData[LObjIndex].data;
         let LTraverse = p_objData[p_strDisplayType];
         // Adding Number
-        let LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, String(LObjIndex + 1));
+        let LTableData = pvtCreateDataRowElement(LTraverse.tagName, LTraverse.className, String(LObjIndex + 1));
         LTableRowElement.appendChild(LTableData)
 
         // Traversing the array Object
         for (let LDataIndex = 0; LDataIndex < GINPUT_DATA_ROW; LDataIndex++) {
             // checking for proper data From the JSON 
             if (pvtValidateInputString(LDataArr[LDataIndex].trim()) && pvtCheckForJsonError(LDataArr)) {
-                LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, LDataArr[LDataIndex]);
+                LTableData = pvtCreateDataRowElement(LTraverse.tagName, LTraverse.className, LDataArr[LDataIndex]);
                 LTableRowElement.appendChild(LTableData);
             } else {
                 return Error();
             }
         }
         // Attaching Anchor Tag
-        LTableData = pvtCreateTableDataElement(LTraverse.tagName, LTraverse.className, p_objData.anchor);
+        LTableData = pvtCreateDataRowElement(LTraverse.tagName, LTraverse.className, p_objData.anchor);
+
         LTableRowElement.appendChild(LTableData);
         // Adding Final Row to the Array
         LTableBodyElementArr.push(LTableRowElement);
@@ -390,7 +393,7 @@ function pvtUpdataObjectData() {
             alert("Invalid JSON format. Please enter a valid JSON string. ");
         }
     } else {
-        return
+        return;
     }
 
 }
@@ -404,7 +407,7 @@ function pvtUpdataObjectData() {
  * @returns {LElement} 
  * This function is called generating the Element for the cells 
  */
-function pvtCreateTableDataElement(p_varTagName, p_strClassName, p_varInnerHTML) {
+function pvtCreateDataRowElement(p_varTagName, p_strClassName, p_varInnerHTML) {
     if (p_varTagName && p_varInnerHTML && p_strClassName) {
 
         let LElement = document.createElement(p_varTagName);
@@ -440,7 +443,7 @@ function pvtCheckSelection() {
 function pvtValidateInputString(p_strInputName) {
     // REGEX that accepts only String that may start with lowercase or uppercase letter
     // and after that only lowercase letters of length between 1 to 15 [exluding both] 
-    const regex = /^[A-Za-z][a-z]{1,14}$/;
+    const regex = /^[A-Za-z][a-z]{1,18}$/;
 
     if (regex.test(p_strInputName)) {
         return true;
@@ -492,6 +495,7 @@ function pvtPromptData() {
 }
 
 /*********************** Helper */
+
 /**
  * 
  * @param {Node} p_varParent - Parent Element
@@ -511,35 +515,27 @@ function pvtGetIndexOfSelectedItem(p_varParent, p_varChild) {
     return LIndex;
 }
 
-// Helper Functions to create Elements of the HTML page
+// ************************* Helper Functions to create Elements of the HTML page
 
 /**
  * 
- * @param {String} p_strClassName - Class Name of the element
- * @param {String} p_strId - Id of the element
- * @param {String} p_strTextContent - Text content inside the element
+ * @param {String} p_StrTagName - Type of Element to create
+ * @param {String} p_strClassName - Not required 
+ * @param {String} p_strTextContent - Not required
+ * @param {String} p_strId - ID - Not required
+ * @param {Event} p_evtType - Type of event to be handled
+ * @param {Function} p_fnEventHandler - Function to be called when event occurs
  * @returns 
  */
-function pvtCreateDivElement(p_strClassName, p_strId = null, p_strTextContent) {
-    let div = document.createElement('div');
-    div.className = p_strClassName;
-    div.textContent = p_strTextContent;
-    if (p_strId) div.id = p_strId;
-    return div;
+function pvtCreateCustomTagElement(p_StrTagName, p_strClassName = null, p_strTextContent = null, p_strId = null, p_evtType = null, p_fnEventHandler = null) {
+    let LElement = document.createElement(p_StrTagName);
+    LElement.textContent = p_strTextContent;
+    LElement.id = p_strId;
+    LElement.addEventListener(p_evtType, p_fnEventHandler);
+    LElement.className = p_strClassName;
+    return LElement;
 }
 
-/**
- * 
- * @param {String} p_strClassName - Class Name of the element
- * @param {Function} p_handleEvent - called when event occurs
- * @returns 
- */
-function pvtCreateListElement(p_strClassName, p_handleEvent) {
-    let li = document.createElement('li');
-    li.addEventListener('click', p_handleEvent);
-    li.className = p_strClassName;
-    return li;
-}
 /**
  * 
  * @returns {Node} Element consisting of the Text Area
@@ -596,19 +592,6 @@ function pvtCreateRadioLabel(p_StrTextContent, p_strEventType, p_strName, p_evtH
 
 /**
  * 
- * @param {String} p_strEventType 
- * @param {Function} p_evtHandlerFunction 
- * @returns 
- */
-function pvtCreateFormElement(p_strEventType, p_evtHandlerFunction) {
-    let form = document.createElement('form');
-    form.className = 'flex-col align-middle md:flex flex-1 md:flex-row justify-center w-auto  '
-    form.addEventListener(p_strEventType, p_evtHandlerFunction);
-    return form;
-}
-
-/**
- * 
  * @param {String} p_strType 
  * @param {String} p_StrPlaceholder 
  * @param {String} p_strId 
@@ -624,39 +607,4 @@ function pvtCreateInputElement(p_strType, p_StrPlaceholder, p_strId, p_boolIsReq
     if (p_strId) input.id = p_strId;
     if (p_boolIsRequired) input.required = p_boolIsRequired;
     return input;
-}
-
-/**
- * 
- * @param {String} p_strClassName 
- * @returns {LTableEl}
- */
-function pvtCreateTableElement(p_strClassName) {
-    let LTableEl = document.createElement('table');
-    LTableEl.className = p_strClassName;
-    return LTableEl;
-}
-
-/**
- * 
- * @param {String} p_strClassName  
- */
-function pvtCreateTableHeadElement(p_strClassName) {
-    let LTHeadEl = document.createElement('thead');
-    LTHeadEl.className = p_strClassName;
-    return LTHeadEl;
-}
-
-function pvtCreateTableRowElement(p_handleEvent) {
-    let LTrElement = document.createElement('tr');
-    LTrElement.addEventListener('click', p_handleEvent);
-    return LTrElement;
-}
-
-function pvtCreateTableHeadCell(p_strClassName, p_strScope, p_strTextContent) {
-    let LThEl = document.createElement('th');
-    LThEl.className = p_strClassName;
-    LThEl.scope = p_strScope;
-    LThEl.textContent = p_strTextContent;
-    return LThEl;
 }
