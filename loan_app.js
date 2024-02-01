@@ -1,40 +1,24 @@
-let loan_amount;
-let tenure;
-let interest_rate;
-let calculated_emi = 0;
+let p_intLoan_amount;
+let p_intTenure_years;
+let p_floatInterest_rate;
+let p_floatCalculated_emi;
 
-function calculate_interest() {
-  loan_amount = document.getElementById("amount").value;
-  interest_rate = document.getElementById("interest").value;
-  tenure = document.getElementById("tenure").value;
-  //   console.log(loan_amount.value);
-  //   console.log(interest_rate.value);
-  //   console.log(tenure.value);
-  let emi = calculate(
-    Number(loan_amount),
-    Number(interest_rate),
-    Number(tenure)
-  );
-  console.log(emi);
-  document.getElementById("emi_amount").innerText = emi.toFixed(2);
+document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  p_intLoan_amount = Number(document.getElementById("amount").value);
+  p_floatInterest_rate = Number(document.getElementById("interest").value);
+  p_intTenure_years = Number(document.getElementById("tenure").value);
+  p_floatCalculated_emi = calculate();
+  if (!isNaN(p_floatCalculated_emi)) {
+    document.getElementById("emi_amount").innerText =
+      p_floatCalculated_emi.toFixed(2);
+  }
+});
+
+function calculate() {
+  let L_floatSimple_interest =
+    (p_intLoan_amount * p_floatInterest_rate * p_intTenure_years) / 100;
+  let L_floatTotal_amount_to_be_paid =
+    L_floatSimple_interest + p_intLoan_amount;
+  return Number(L_floatTotal_amount_to_be_paid / (12 * p_intTenure_years));
 }
-
-function calculate(p, r, n) {
-  console.log(p);
-  console.log(r);
-  console.log(n);
-  //   let sum = 1 + r;
-  //   console.log(sum);
-  //   console.log(Math.pow(sum, n));
-  //   console.log(p * r * Math.pow(1 + r, n));
-  //   console.log(Math.pow(1 + r, n) - 1);
-
-  return Number((p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
-}
-
-// function check() {
-//   if (loan_amount === null || interest_rate === null || tenure === null) {
-//     alert("Please fill out all the value");
-//     return false;
-//   } else return true;
-// }
