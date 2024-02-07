@@ -1,0 +1,33 @@
+EXT - Form Components
+ 
+https://docs.sencha.com/extjs/7.5.0/guides/components/forms.html
+
+Fieldset to encapsulate a form:
+https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.FieldSet.html
+
+Form Panel to insert fields and handle form specific events:
+https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.Panel.html
+
+Form Layout:
+https://docs.sencha.com/extjs/6.5.3/classic/Ext.layout.container.Form.html
+
+Field Types:
+Checkbox: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Checkbox.html
+ComboBox: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.ComboBox.html
+Date: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Date.html
+Display: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Display.html
+File: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.File.html
+Hidden: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Hidden.html
+HtmlEditor: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.HtmlEditor.html
+Number: https://docs.sencha.com/extjs/7.5.0/classic/Ext.data.field.Number.html
+Radio: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Radio.html
+Text: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Text.html
+TextArea: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.TextArea.html
+Time: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Time.html
+Some extra fields:
+Spinner: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Spinner.html
+Tag: https://docs.sencha.com/extjs/7.5.0/classic/Ext.form.field.Tag.html
+Examples:
+https://www.tutorialspoint.com/extjs/components_form.htm
+https://examples.sencha.com/extjs/7.5.1/examples/kitchensink/?classic#forms
+https://examples.sencha.com/extjs/7.5.1/examples/kitchensink/?classic#form-fields
