@@ -1,0 +1,49 @@
+Create a File Explorer
+3 hours ago, Rasika Ingole
+Design and implement a file explorer application using Ext JS tree panel that simulates a hierarchical structure of files and folders.
+The application should incorporate the following features:
+
+Requirements:
+Display Icons:
+Nodes in the tree panel should display icons based on their corresponding record types (e.g. folder, file).
+
+Drag-and-Drop Functionality:
+Implement drag-and-drop functionality in the tree panel to allow users to rearrange nodes by dragging and dropping them onto different nodes.
+Provide clear and informative messages when dragging and dropping items, indicating whether the data already exists or not.
+
+Unique Data for Each Folder:
+Ensure that each folder in the tree panel contains unique data.
+
+Add New Folders and Files:
+Implement the ability to add new folders and files to the TreePanel.
+
+Delete Folders and Files:
+Allow users to delete folders and files from the TreePanel.
+Implement confirmation dialogs to prevent accidental deletions.
+
+Move Items Up or Down:
+Provide functionality to move folders and files up or down. Files can be positioned under the folder, but folders cannot be moved under files.
+Ensure that the movement is visually represented in the TreePanel.
+
+Search Feature:
+Implement a search feature that allows users to search for specific records within the TreePanel.
+Highlight or focus on the matching nodes.
+
+Filtering Options:
+Integrate filtering options for columns in the TreePanel.
+Users should be able to filter nodes based on various criteria, such as name, date, or file type.
+Context Menu:
+Implement a context menu that appears when right-clicking on nodes, providing options such as move up, move down, expand, collapse and other relevant actions.
+
+Copy and Paste Functionality:
+Enable the ability to copy and paste nodes within the tree panel, allowing users to duplicate or move items efficiently.
+Multiple Selection:
+Allow users to select multiple nodes simultaneously, facilitating bulk operations like deletion, moving, or copying.
+Breadcrumb Navigation:
+Include a breadcrumb navigation bar to provide users with a clear path to the current location within the hierarchical structure.
+Resizable Columns:
+Enable users to resize columns in the tree panel to accommodate varying content lengths and improve overall visibility.
+Collapsible Nodes:
+Implement the ability to collapse and expand nodes in the tree panel, enhancing the user's control over the visibility of the hierarchical structure.
+Keyboard Shortcuts:
+Include keyboard shortcuts for common actions to enhance accessibility and improve the overall user experience.
